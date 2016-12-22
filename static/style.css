@@ -4,3 +4,17 @@
 	border-right : solid 1px black;
 	float: left;
 }
+
+.tableau {
+	border : solid 1px black;
+	text-align: center;
+}
+
+table tr td {
+	width : 300px;
+	text-align: center;
+	border : solid 1px black;
+}
+
+tr td {
+}

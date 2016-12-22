@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
-<!--<link rel="stylesheet" type="text/css" href="bower_components\bootstrap\dist\css\bootstrap.css">
-<link rel="stylesheet" type="text/css" href="css/style.css">-->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='bower_components/bootstrap/dist/css/bootstrap.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style.css') }}">
 </head>
  <body>
   <h1>Suivi de positions google</h1>
@@ -10,19 +10,31 @@
    <br />
    Site web
    <br />
-   <form action="/" method="POST">
-   <input type="text" name="text" placeholder="domaine" />
+ <!--  <form action="/" method="POST">
+   <input type="text" name="url" placeholder="domaine" />
    <br />
    <br />
    Mots clés
    <br />
-   <textarea></textarea>
+   <textarea name="mots" placeholder="mots-clés" ></textarea>
    <br />
    <input type="submit" class="btn btn-success" value="Lancer le crawl"/>
-   </form>
+   </form>-->
+   {% from "form.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.url) }}
+    {{ render_field(form.motscles) }}
+    {{ render_field(form.page_max) }}
+  </dl>
+  <p><input type="submit" class="btn btn-success" value="Lancer le crawl"/>
+</form>
   </div>
-  {{resultat}}
+  <table class="tableau" style=" border : solid 1px black;text-align: center;">
+  <tr><td>Mot-clé</td><td>URL</td><td>Position</td></tr>
+  <tr><td>{{motscles}}</td><td>{{resultat}}</td><td>{{position}}</td></tr>
+  </table>
 </body>
-<!--<script type="text/javascript" src="bower_components\jquery\dist\jquery.min.js"></script>
-<script type="text/javascript" src="bower_components\bootstrap\dist\js\bootstrap.js"></script>-->
+<script type="text/javascript" src="{{ url_for('static',filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static',filename='bower_components/bootstrap/dist/js/bootstrap.js') }}"></script>
 </html>
