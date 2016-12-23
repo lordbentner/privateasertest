@@ -30,10 +30,11 @@
   <p><input type="submit" class="btn btn-success" value="Lancer le crawl"/>
 </form>
   </div>
-  <table class="tableau" style=" border : solid 1px black;text-align: center;">
+ <!-- <table class="tableau" style=" border : solid 1px black;text-align: center;">
   <tr><td>Mot-clé</td><td>URL</td><td>Position</td></tr>
-  <tr><td>{{motscles}}</td><td>{{resultat}}</td><td>{{position}}</td></tr>
-  </table>
+  <tr><td>{{res}}</td><td>{{res}}</td><td>{{res}}</td></tr>
+  </table>-->
+  <center><h2>Resultats</h2>{{resultat|safe}}</center>
 </body>
 <script type="text/javascript" src="{{ url_for('static',filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static',filename='bower_components/bootstrap/dist/js/bootstrap.js') }}"></script>
