@@ -7,10 +7,10 @@ from wtforms import Form, BooleanField, TextField, validators, TextAreaField , F
 app = Flask(__name__)
 
 class RegistrationForm(Form):
-    url    = TextField('url')
-    motscles = TextAreaField('motscles',render_kw={"rows": 11, "cols": 30})
+    url    = TextField('Site web')
+    motscles = TextAreaField('Mots-clés',render_kw={"rows": 11, "cols": 40})
     position = TextField('position')
-    page_max = TextField('page_max')
+    page_max = TextField('Descendre jusqu\'a la page')
 
 class MyHTMLParser(HTMLParser):
     def __init__(self):
