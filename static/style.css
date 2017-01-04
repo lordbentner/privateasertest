@@ -1,11 +1,11 @@
-.saisie {
+.entry {
 	height : 100%;
 	width : 30%;
 	border-right : solid 1px black;
 	float: left;
 }
 
-.tableau {
+.array {
 	border : solid 1px black;
 	text-align: center;
 }

@@ -3,14 +3,20 @@ from flask import request,url_for
 import requests 
 from flask import render_template
 from html.parser import HTMLParser
-from wtforms import Form, BooleanField, TextField, validators, TextAreaField , FieldList, IntegerField
+from wtforms import Form, TextField, validators, ValidationError, TextAreaField , SubmitField, FieldList, IntegerField
 app = Flask(__name__)
 
 class RegistrationForm(Form):
-    url    = TextField('Site web')
-    motscles = TextAreaField('Mots-clés',render_kw={"rows": 11, "cols": 40})
-    position = TextField('position')
-    page_max = TextField('Descendre jusqu\'a la page')
+    def isNumber(form, field):
+        try:
+            int(field.data)
+        except ValueError:
+            raise ValidationError('Field must be less than 50 characters')
+            return render_template('index.html')
+
+    url = TextField('Site web')
+    keyword = TextAreaField('Mots-clés',render_kw={"rows": 11, "cols": 40})
+    page_max = TextField('Descendre jusqu\'a la page',[validators.Required(),isNumber])
 
 class MyHTMLParser(HTMLParser):
     def __init__(self):
@@ -18,9 +24,7 @@ class MyHTMLParser(HTMLParser):
         self.inLink = False
         self.data = 'n/a'
         self.position = 0
-        self.countLanguages = 0
         self.lasttag = None
-        self.lastname = None
         self.lastvalue = None
         self.form = RegistrationForm(request.form)
 
@@ -45,32 +49,35 @@ class MyHTMLParser(HTMLParser):
 @app.route('/', methods=['POST'])
 def my_form_post():
     form = RegistrationForm(request.form)
-    page  = form.page_max.data
-    i = 0;
-    donne_final = '<table class="tableau" style=" border : solid 1px black;text-align: center;"><tr><td><b>Mot-clé</b></td><td><b>URL</b></td><td><b>Position</b></td></tr>'
-    form.motscles.data.split("\n")
-    for l in form.motscles.data.split("\n"):
+    parse = MyHTMLParser()
+    try:
+        int(parse.form.page_max.data)
+    except ValueError:     
+        return render_template('index.html',form=form,error="Veuillez inserer un nombre")
+
+    page  = parse.form.page_max.data
+    i = 0
+    j = 0
+    array_data = []
+    parse.form.keyword.data.split("\n")
+    for l in parse.form.keyword.data.split("\n"):
         while i < (int(page)*10):
             processed_text = "https://www.google.fr/search?hl=fr&q="+l+"&start="+str(i)
-            parse = MyHTMLParser()
             r = requests.get(processed_text)
             res = parse.feed(r.text)
             if parse.data  != 'n/a' or (i+10)  >= (int(page)*10):
-                donne_final = donne_final+"<tr><td>"
-                donne_final = donne_final+l
-                donne_final = donne_final+"</td><td>"
-                donne_final = donne_final+parse.data
-                donne_final = donne_final+"</td><td>"
+                array_data.append([])
+                array_data[j].append(l)
+                array_data[j].append(parse.data)
                 if parse.data  != 'n/a':
-                    donne_final = donne_final+str(parse.position+i)
+                    array_data[j].append(str(parse.position+i))
                 else:
-                    donne_final = donne_final+'n/a'
-                donne_final = donne_final+"</td></tr>"
+                    array_data[j].append('n/a')
                 break
             i = i+10
-    donne_final  = donne_final+"</table>"
+        j = j+1
 
-    return render_template('index.html', form=form, resultat=donne_final, position=parse.position)
+    return render_template('index.html', form=form,result = array_data)
 
 @app.route('/')
 
