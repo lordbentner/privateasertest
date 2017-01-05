@@ -41,13 +41,12 @@ class MyHTMLParser(HTMLParser):
 
 @app.route('/', methods=['POST'])
 def my_form_post():
-    form = RegistrationForm(request.form)
     parse = MyHTMLParser()
     page  = parse.form.page_max.data
     try:
         int(parse.form.page_max.data)
     except ValueError:     
-        return render_template('index.html', form=form,error="Veuillez insérer un nombre")
+        return render_template('index.html', form=parse.form,error="Veuillez insérer un nombre")
     i = 0
     j = 0
     array_data = []
