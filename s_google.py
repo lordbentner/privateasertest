@@ -51,25 +51,24 @@ def my_form_post():
     i = 0
     j = 0
     array_data = []
-    if parse.form.validate():
-        parse.form.keyword.data.split("\n")
-        for l in parse.form.keyword.data.split("\n"):
-            while i < (int(page)*10):
-                processed_text = "https://www.google.fr/search?hl=fr&q="+l+"&start="+str(i)
-                r = requests.get(processed_text)
-                res = parse.feed(r.text)
-                if parse.data  != 'n/a' or (i+10)  >= (int(page)*10):
-                    array_data.append([])
-                    array_data[j].append(l)
-                    array_data[j].append(parse.data)
-                    if parse.data  != 'n/a':
-                        array_data[j].append(str(parse.position+i))
-                    else:
-                        array_data[j].append('n/a')
-                    break
-                i = i+10
-            j = j+1
-
+    parse.form.keyword.data.split("\n")
+    for l in parse.form.keyword.data.split("\n"):
+        while i < (int(page)*10):
+            processed_text = "https://www.google.fr/search?hl=fr&q="+l+"&start="+str(i)
+            r = requests.get(processed_text)
+            res = parse.feed(r.text)
+            if parse.data  != 'n/a' or (i+10)  >= (int(page)*10):
+                array_data.append([])
+                array_data[j].append(l)
+                array_data[j].append(parse.data)
+                if parse.data  != 'n/a':
+                    array_data[j].append(str(parse.position+i))
+                else:
+                    array_data[j].append('n/a')
+                break
+            i = i+10
+        j = j+1
+        
     return render_template('index.html', form=form,result = array_data)
 
 @app.route('/')
