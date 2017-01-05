@@ -3,13 +3,13 @@ from flask import request,url_for
 import requests
 from flask import render_template
 from html.parser import HTMLParser
-from wtforms import Form, TextField, validators, ValidationError, TextAreaField , SubmitField, FieldList, IntegerField
+from wtforms import Form, TextField, validators, ValidationError, TextAreaField
 app = Flask(__name__)
 
 class RegistrationForm(Form):
     url = TextField('Site web')
     keyword = TextAreaField('Mots-clés',render_kw={"rows": 11, "cols": 40})
-    page_max = TextField('Descendre jusqu\'a la page',[validators.Required()])
+    page_max = TextField('Descendre jusqu\'a la page')
 
 class MyHTMLParser(HTMLParser):
     def __init__(self):
@@ -68,7 +68,7 @@ def my_form_post():
                 break
             i = i+10
         j = j+1
-        
+
     return render_template('index.html', form=form,result = array_data)
 
 @app.route('/')
