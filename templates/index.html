@@ -1,9 +1,12 @@
 <!DOCTYPE html>
+<html>
 <head>
-<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='bower_components/bootstrap/dist/css/bootstrap.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style.css') }}">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='bower_components/bootstrap/dist/css/bootstrap.css')}}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style.css') }}" />
+<title>Suivi de positions google</title>
 </head>
- <body>
+<body>
   <h1>Suivi de positions google</h1>
   <div class="entry">
    <h2>Paramètres</h2>
@@ -14,23 +17,24 @@
   <dl>
     {{ render_field(form.url) }}
     {{ render_field(form.keyword) }}
-    <font color="red">{{error}}</font>
+    <div style="color:red">
+      {{error}}
+    </div>
     {{ render_field(form.page_max) }}
   </dl>
-  <p><input type="submit" class="btn btn-success" value="Lancer le crawl"/>
+  <p><input type="submit" class="btn btn-success" value="Lancer le crawl"/></p>
 </form>
   </div>
  <table class="array">
   <tr><td>Mot-clé</td><td>URL</td><td>Position</td></tr>
-{% for row in result %}
-  <tr>
-  {% for column in row %}
-    <td>{{ column|e }}</td>
-  {% endfor %} 
-  </tr>
-{% endfor %}
-</table>
-
+  {% for row in result %}
+    <tr>
+    {% for column in row %}
+      <td>{{ column|e }}</td>
+    {% endfor %} 
+    </tr>
+  {% endfor %}
+  </table>
 </body>
 <script type="text/javascript" src="{{ url_for('static',filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static',filename='bower_components/bootstrap/dist/js/bootstrap.js') }}"></script>

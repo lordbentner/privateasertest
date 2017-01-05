@@ -1,22 +1,15 @@
 from flask import Flask
 from flask import request,url_for
-import requests 
+import requests
 from flask import render_template
 from html.parser import HTMLParser
 from wtforms import Form, TextField, validators, ValidationError, TextAreaField , SubmitField, FieldList, IntegerField
 app = Flask(__name__)
 
 class RegistrationForm(Form):
-    def isNumber(form, field):
-        try:
-            int(field.data)
-        except ValueError:
-            raise ValidationError('Field must be less than 50 characters')
-            return render_template('index.html')
-
     url = TextField('Site web')
     keyword = TextAreaField('Mots-clés',render_kw={"rows": 11, "cols": 40})
-    page_max = TextField('Descendre jusqu\'a la page',[validators.Required(),isNumber])
+    page_max = TextField('Descendre jusqu\'a la page',[validators.Required()])
 
 class MyHTMLParser(HTMLParser):
     def __init__(self):
@@ -50,32 +43,32 @@ class MyHTMLParser(HTMLParser):
 def my_form_post():
     form = RegistrationForm(request.form)
     parse = MyHTMLParser()
+    page  = parse.form.page_max.data
     try:
         int(parse.form.page_max.data)
     except ValueError:     
-        return render_template('index.html',form=form,error="Veuillez inserer un nombre")
-
-    page  = parse.form.page_max.data
+        return render_template('index.html', form=form,error="Veuillez insérer un nombre")
     i = 0
     j = 0
     array_data = []
-    parse.form.keyword.data.split("\n")
-    for l in parse.form.keyword.data.split("\n"):
-        while i < (int(page)*10):
-            processed_text = "https://www.google.fr/search?hl=fr&q="+l+"&start="+str(i)
-            r = requests.get(processed_text)
-            res = parse.feed(r.text)
-            if parse.data  != 'n/a' or (i+10)  >= (int(page)*10):
-                array_data.append([])
-                array_data[j].append(l)
-                array_data[j].append(parse.data)
-                if parse.data  != 'n/a':
-                    array_data[j].append(str(parse.position+i))
-                else:
-                    array_data[j].append('n/a')
-                break
-            i = i+10
-        j = j+1
+    if parse.form.validate():
+        parse.form.keyword.data.split("\n")
+        for l in parse.form.keyword.data.split("\n"):
+            while i < (int(page)*10):
+                processed_text = "https://www.google.fr/search?hl=fr&q="+l+"&start="+str(i)
+                r = requests.get(processed_text)
+                res = parse.feed(r.text)
+                if parse.data  != 'n/a' or (i+10)  >= (int(page)*10):
+                    array_data.append([])
+                    array_data[j].append(l)
+                    array_data[j].append(parse.data)
+                    if parse.data  != 'n/a':
+                        array_data[j].append(str(parse.position+i))
+                    else:
+                        array_data[j].append('n/a')
+                    break
+                i = i+10
+            j = j+1
 
     return render_template('index.html', form=form,result = array_data)
 
